@@ -1,0 +1,148 @@
+/* Banner Component Styles with NGU Carousel */
+
+/* Custom NGU Carousel styles for smooth transitions */
+:host ::ng-deep .ngucarousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Importante para esconder slides durante transição */
+}
+
+:host ::ng-deep .ngucarousel .ngucarousel-inner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  /* Transição mais suave para o container principal */
+  transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Custom point indicators */
+:host ::ng-deep .ngucarousel-point {
+  list-style-type: none;
+  text-align: center;
+  padding: 12px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: auto;
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  left: 0;
+  box-sizing: border-box;
+  z-index: 30;
+}
+
+:host ::ng-deep .ngucarousel-point li {
+  display: inline-block;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+:host ::ng-deep .ngucarousel-point li.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+:host ::ng-deep .ngucarousel-point li:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Smooth transitions for carousel items */
+:host ::ng-deep .nguitem {
+  transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+  /* Remove any jarring movements */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Enhanced carousel container for smooth transitions */
+:host ::ng-deep .ngucarousel .ngucarousel-inner {
+  transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  /* Hardware acceleration for smoother animations */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Smooth slide animations */
+:host ::ng-deep .ngucarousel-item {
+  transition: opacity 1.2s ease-in-out, transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Suavizar transições especificamente para o loop */
+:host ::ng-deep .ngucarousel[data-loop="true"] .nguitem {
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Performance optimizations */
+:host ::ng-deep .ngucarousel .nguitem img {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Custom button styles */
+.carousel-nav-button {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-nav-button:hover {
+  transform: scale(1.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .carousel-nav-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  :host ::ng-deep .ngucarousel-point {
+    bottom: 15px;
+    padding: 8px;
+  }
+
+  :host ::ng-deep .ngucarousel-point li {
+    width: 10px;
+    height: 10px;
+    margin: 0 3px;
+  }
+}
+
+/* Accessibility improvements */
+:host ::ng-deep .ngucarousel:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+/* Touch support enhancements */
+:host ::ng-deep .ngucarousel {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* Loading state */
+.carousel-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
