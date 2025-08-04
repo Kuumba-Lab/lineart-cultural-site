@@ -1,0 +1,58 @@
+name: Angular CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.KUUMBA_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy container via SSH
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "\
+            echo '${GHCR_PAT}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin && \
+            docker pull ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest && \
+            docker stop lineart-cultural-site || true && \
+            docker rm lineart-cultural-site || true && \
+            docker run -d --name lineart-cultural-site --network ujamaa-net \
+              -p 8191:4000 \
+              ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest"
+        env:
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
