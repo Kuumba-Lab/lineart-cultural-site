@@ -10,8 +10,6 @@ COPY . .
 
 RUN npm run build
 
-RUN chmod +x ./start-app.sh
-
 EXPOSE 4000
 
 CMD ["node dist/lineart-cultural-site/server/server.mjs"]
