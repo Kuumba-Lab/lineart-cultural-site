@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { NguCarousel, NguCarouselConfig, NguCarouselDefDirective, NguCarouselNextDirective, NguCarouselPrevDirective, NguItemComponent } from '@ngu/carousel';
+import { NguCarousel, NguCarouselConfig, NguCarouselDefDirective, NguItemComponent } from '@ngu/carousel';
 @Component({
   selector: 'app-banner',
   standalone: true,
@@ -9,8 +9,6 @@ import { NguCarousel, NguCarouselConfig, NguCarouselDefDirective, NguCarouselNex
     NguCarousel,
     NguItemComponent,
     NguCarouselDefDirective,
-    NguCarouselNextDirective,
-    NguCarouselPrevDirective,
 ],
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.css'
