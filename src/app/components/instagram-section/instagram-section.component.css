@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.instagram-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.instagram-card .instagram-media {
+  margin: 0 !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.instagram-card .instagram-media iframe {
+  width: 100% !important;
+}
+
+@media (max-width: 640px) {
+  .instagram-card {
+    border-radius: 1rem;
+  }
+}
