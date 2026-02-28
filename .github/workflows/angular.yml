@@ -37,26 +37,23 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Install sshpass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
-
       - name: Set up known_hosts
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy container via SSH
         run: |
-          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh \
-            -o PreferredAuthentications=password \
-            -o PubkeyAuthentication=no \
+          ssh -i ~/.ssh/deploy_key \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "\
             echo '${GHCR_PAT}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin && \
             docker pull ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest && \
             docker stop lineart-cultural-site || true && \
             docker rm lineart-cultural-site || true && \
             docker run -d --name lineart-cultural-site --network ujamaa-net \
-              -p 8191:4000 \
+              -p 4202:4200 \
               ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest"
         env:
           GHCR_PAT: ${{ secrets.GHCR_PAT }}
