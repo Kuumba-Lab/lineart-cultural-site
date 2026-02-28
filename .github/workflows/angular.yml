@@ -52,7 +52,7 @@ jobs:
             docker pull ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest && \
             docker stop lineart-cultural-site || true && \
             docker rm lineart-cultural-site || true && \
-            docker run -d --name lineart-cultural-site --network ujamaa-net \
+            docker run -d --name lineart-cultural-site --network lineart-net \
               -p 4202:4200 \
               ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest"
         env:
