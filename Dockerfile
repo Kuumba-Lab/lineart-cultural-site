@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 4000
+EXPOSE 4200
 
 CMD ["node", "dist/lineart-cultural-site/server/server.mjs"]
