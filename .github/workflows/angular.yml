@@ -53,9 +53,11 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "\
             echo '${GHCR_PAT}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin && \
             docker pull ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest && \
+            docker network inspect lineart-net >/dev/null 2>&1 || docker network create lineart-net && \
             docker stop lineart-cultural-site || true && \
             docker rm lineart-cultural-site || true && \
             docker run -d --name lineart-cultural-site --network lineart-net \
+              --restart unless-stopped \
               -p 4202:4200 \
               ghcr.io/${GITHUB_REPOSITORY,,}/lineart-cultural-site:latest"
         env:
