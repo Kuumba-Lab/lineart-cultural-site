@@ -1,0 +1,43 @@
+<section class="w-full py-10 sm:py-12 md:py-16 bg-slate-50">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <a routerLink="/publicacoes" class="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:underline">
+      &larr; Todas as publicações
+    </a>
+
+    <div *ngIf="isLoading" class="mt-6 animate-pulse space-y-4">
+      <div class="h-10 w-3/4 rounded bg-slate-200"></div>
+      <div class="h-72 w-full rounded-2xl bg-slate-200"></div>
+      <div class="h-4 w-full rounded bg-slate-200"></div>
+      <div class="h-4 w-5/6 rounded bg-slate-200"></div>
+    </div>
+
+    <div *ngIf="!isLoading && notFound" class="mt-6 rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm ring-1 ring-slate-100">
+      <h1 class="text-xl font-bold text-slate-900">Publicação não encontrada</h1>
+      <p class="mt-2">Ela pode ter sido removida ou ainda não foi publicada.</p>
+    </div>
+
+    <article *ngIf="!isLoading && post" class="mt-6">
+      <div class="flex flex-wrap gap-2">
+        <a *ngFor="let tag of post.tags" [routerLink]="['/publicacoes']" [queryParams]="{ tag: tag.name }"
+          class="rounded-full bg-white px-3 py-1 text-xs text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100">#{{ tag.name }}</a>
+      </div>
+
+      <h1 class="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">{{ post.title }}</h1>
+
+      <div class="mt-5 flex flex-wrap items-center gap-4 text-sm text-slate-600">
+        <a *ngFor="let author of post.authors" [routerLink]="['/publicacoes']" [queryParams]="{ autor: author.name }" class="flex items-center gap-2 hover:text-primary-300">
+          <img [src]="author.avatar || 'logo.png'" [alt]="author.name" class="h-9 w-9 rounded-full bg-[#0a0d29] object-cover ring-2 ring-white">
+          <span class="font-semibold text-slate-800">{{ author.name }}</span>
+        </a>
+        <time [attr.datetime]="post.createdAt" class="text-slate-500">{{ post.createdAt | date:"dd 'de' MMMM 'de' yyyy" }}</time>
+        <span *ngIf="post.event" class="rounded-full bg-secondary-100/60 px-3 py-1 text-xs font-semibold text-slate-800">{{ post.event.name }}</span>
+      </div>
+
+      <figure *ngIf="post.coverOriginal || post.cover" class="mt-8 overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-100">
+        <img [src]="post.coverOriginal || post.cover" [alt]="post.title" class="w-full max-h-[520px] object-cover">
+      </figure>
+
+      <div class="post-content mt-8 rounded-2xl bg-white p-6 sm:p-10 shadow-sm ring-1 ring-slate-100" [innerHTML]="post.content"></div>
+    </article>
+  </div>
+</section>
