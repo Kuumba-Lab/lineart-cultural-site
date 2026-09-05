@@ -1,0 +1,105 @@
+<section class="w-full py-10 sm:py-12 md:py-16 bg-slate-50">
+  <div class="container mx-auto px-4">
+    <p class="text-sm font-semibold tracking-wide uppercase text-blue-700">Publicações</p>
+    <h1 class="mt-2 text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
+      Textos, memórias e reflexões do LINEART
+    </h1>
+
+    <!-- BUSCA -->
+    <form class="mt-6 flex flex-col sm:flex-row gap-3" (submit)="search(); $event.preventDefault()">
+      <input type="search" name="busca" [(ngModel)]="filters.searchTerm" placeholder="Buscar por título, autor ou tag"
+        class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-primary-300 focus:ring-2 focus:ring-primary-100 focus:outline-none">
+      <button type="submit" class="rounded-xl bg-[#0a0d29] px-6 py-3 font-semibold text-white hover:bg-slate-800">
+        Buscar
+      </button>
+      <button *ngIf="hasFilters" type="button" (click)="clearFilters()" class="rounded-xl border border-slate-200 bg-white px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100">
+        Limpar
+      </button>
+    </form>
+
+    <!-- FILTROS: AUTORES E TAGS -->
+    <div class="mt-4 flex flex-col gap-3">
+      <div *ngIf="authors.length" class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold uppercase text-slate-500 mr-1">Autores:</span>
+        <button *ngFor="let author of authors" type="button" (click)="selectAuthor(author.name)"
+          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm transition"
+          [ngClass]="filters.author === author.name ? 'border-primary-400 bg-primary-400 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100'">
+          <img *ngIf="author.avatar" [src]="author.avatar" [alt]="author.name" class="h-5 w-5 rounded-full object-cover">
+          {{ author.name }}
+        </button>
+      </div>
+
+      <div *ngIf="tags.length" class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold uppercase text-slate-500 mr-1">Tags:</span>
+        <button *ngFor="let tag of tags" type="button" (click)="selectTag(tag.name)"
+          class="rounded-full border px-3 py-1 text-sm transition"
+          [ngClass]="filters.tag === tag.name ? 'border-primary-400 bg-primary-400 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100'">
+          #{{ tag.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <p *ngIf="!isLoading && !hasError" class="mt-8 text-sm text-slate-500">
+      {{ paged.count }} {{ paged.count === 1 ? 'publicação encontrada' : 'publicações encontradas' }}
+    </p>
+
+    <div *ngIf="isLoading" class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let _ of [1,2,3]" class="h-80 animate-pulse rounded-2xl bg-white shadow-sm ring-1 ring-slate-100"></div>
+    </div>
+
+    <div *ngIf="!isLoading && hasError" class="mt-8 rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm ring-1 ring-slate-100">
+      Não foi possível carregar as publicações agora. Tente novamente em instantes.
+    </div>
+
+    <div *ngIf="!isLoading && !hasError && !paged.content.length" class="mt-8 rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm ring-1 ring-slate-100">
+      Nenhuma publicação encontrada com esses filtros.
+    </div>
+
+    <div *ngIf="!isLoading && paged.content.length" class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <article *ngFor="let post of paged.content" class="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 transition hover:shadow-md">
+        <a [routerLink]="['/publicacoes', post.id]" class="block">
+          <img *ngIf="post.cover" [src]="post.cover" [alt]="post.title" class="h-48 w-full object-cover" loading="lazy">
+          <div *ngIf="!post.cover" class="flex h-48 w-full items-center justify-center bg-[#0a0d29]">
+            <img src="logo.png" alt="LINEART" class="h-20 opacity-80">
+          </div>
+        </a>
+
+        <div class="flex flex-1 flex-col p-5">
+          <div class="flex flex-wrap gap-1">
+            <button *ngFor="let tag of post.tags" type="button" (click)="selectTag(tag.name)" class="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200">#{{ tag.name }}</button>
+          </div>
+
+          <h2 class="mt-3 text-lg font-bold text-slate-900 leading-snug">
+            <a [routerLink]="['/publicacoes', post.id]" class="hover:text-primary-300">{{ post.title }}</a>
+          </h2>
+
+          <p class="mt-2 flex-1 text-sm text-slate-600 leading-relaxed">{{ excerpt(post) }}</p>
+
+          <div class="mt-4 flex items-center justify-between gap-2 text-xs text-slate-500">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="flex -space-x-2">
+                <img *ngFor="let author of post.authors" [src]="author.avatar || 'logo.png'" [alt]="author.name" class="h-7 w-7 rounded-full border-2 border-white bg-[#0a0d29] object-cover">
+              </div>
+              <span class="truncate">{{ authorsLabel(post) }}</span>
+            </div>
+            <time [attr.datetime]="post.createdAt" class="shrink-0">{{ post.createdAt | date:'dd/MM/yyyy' }}</time>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- PAGINAÇÃO -->
+    <nav *ngIf="!isLoading && totalPages > 1" class="mt-10 flex justify-center" aria-label="Paginação">
+      <div class="inline-flex -space-x-px text-sm">
+        <button type="button" [disabled]="filters.page === 1" (click)="goToPage(filters.page - 1)"
+          class="rounded-s-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40">Anterior</button>
+        <button *ngFor="let page of pages" type="button" (click)="goToPage(page)"
+          class="border border-slate-200 px-4 py-2 hover:bg-slate-100"
+          [ngClass]="page === filters.page ? 'bg-[#0a0d29] text-white hover:bg-[#0a0d29]' : 'bg-white text-slate-700'">{{ page }}</button>
+        <button type="button" [disabled]="filters.page === totalPages" (click)="goToPage(filters.page + 1)"
+          class="rounded-e-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40">Próxima</button>
+      </div>
+    </nav>
+  </div>
+</section>
