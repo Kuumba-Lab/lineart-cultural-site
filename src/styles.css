@@ -9,3 +9,20 @@ html, body {
 }
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.post-content h1, .post-content h2, .post-content h3 {
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+  color: #111827;
+}
+.post-content h1 { font-size: 1.5rem; }
+.post-content h2 { font-size: 1.25rem; }
+.post-content h3 { font-size: 1.125rem; }
+.post-content p { margin: 0.75rem 0; }
+.post-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1rem auto; }
+.post-content blockquote { border-left: 4px solid #368f3f; padding-left: 1rem; margin: 1rem 0; color: #4b5563; font-style: italic; }
+.post-content ul, .post-content ol { margin: 0.75rem 0 0.75rem 1.5rem; }
+.post-content ul { list-style: disc; }
+.post-content ol { list-style: decimal; }
+.post-content a { color: #02d99e; text-decoration: underline; }
+.post-content code { background: #f1f1f1; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+.post-content hr { margin: 1.5rem 0; border-color: #e0dede; }

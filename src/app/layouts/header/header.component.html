@@ -1,5 +1,18 @@
 <header class="print:hidden flex flex-row justify-center w-full h-[80px] bg-[#0a0d29] backdrop-blur md:px-2">
-  <div class="container flex items-center">
-    <img class="h-full p-2" src="logo.png" alt="Logo LINEART">
+  <div class="container flex items-center gap-4">
+    <a routerLink="/" class="flex items-center">
+      <img class="h-full max-h-[72px] p-2" src="logo.png" alt="Logo LINEART">
+    </a>
+
+    <nav class="ml-auto flex items-center gap-4">
+      <a routerLink="/publicacoes" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">
+        Publicações
+      </a>
+
+      <form class="flex items-center" (submit)="onSearch($event)">
+        <input type="search" name="q" [(ngModel)]="searchTerm" placeholder="Buscar…" aria-label="Buscar no site"
+          class="w-32 sm:w-56 bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 px-3 py-1.5">
+      </form>
+    </nav>
   </div>
 </header>
