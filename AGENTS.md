@@ -40,7 +40,7 @@ npm run serve:ssr:lineart-cultural-site   # sobe o SSR local na porta 4200 (PORT
 2. SSH na VPS (secrets `VPS_HOST`/`VPS_USER`/`VPS_PASSWORD` — presumivelmente a mesma máquina da lineart-api, 147.79.81.208) via `sshpass`.
 3. `docker pull` + `docker run -d --name lineart-cultural-site --network lineart-net --restart unless-stopped -p 4202:4200 <img>` (cria `lineart-net` se não existir).
 
-Container expõe SSR na `4202:4200`; o nginx do VPS proxyfies `capoeiralineart.com` pra essa porta. Deploy manual local (se precisar): `docker build -t lineart-cultural-site . && docker run -p 4202:4200 lineart-cultural-site`.
+Container expõe SSR na `4202:4200`; o nginx do VPS proxyfies `capoeiralineart.com` pra essa porta. **Local** roda na `8202:4200` (range lineart: db `5460`, api `8201`, site `8202`, admin `8203` — fora das faixas ujamaa): `docker build -t lineart-cultural-site . && docker run -p 8202:4200 --network lineart-net lineart-cultural-site`.
 
 ## Fluxo pós-alteração (sempre)
 
@@ -48,16 +48,21 @@ Container expõe SSR na `4202:4200`; o nginx do VPS proxyfies `capoeiralineart.c
 # 1. Build local (AOT+SSR pega o que o editor não vê)
 npm run build
 
-# 2. Commit + push em main — isso já dispara o deploy
+# 2. Commit + push em main
 git add -A && git commit -q -m "fix: descricao"
 git push origin main
 
-# 3. Acompanhar a action e verificar
-gh run watch            # ou abrir Actions no GitHub
-curl -s -o /dev/null -w '%{http_code}' https://capoeiralineart.com/
+# 3. Deploy local (rebuild + recria container na 8202)
+docker build -q -t lineart-cultural-site:latest .
+docker rm -f lineart-cultural-site && docker run -d --name lineart-cultural-site \
+  --network lineart-net --network-alias lineart-site --restart unless-stopped \
+  -p 8202:4200 lineart-cultural-site:latest
+
+# 4. Verificar local
+curl -s -o /dev/null -w '%{http_code}' http://localhost:8202/
 ```
 
-**Não declare "feito" sem a action verde e a página respondendo** — aqui não existe `deploy.sh`: se a action falhou no step SSH, o push não foi suficiente.
+**Não declare "feito" sem container local recriado e verificado** — o push também dispara a Action de produção (GHCR → VPS :4202); se ela falhar no step SSH, o deploy de prod não aconteceu.
 
 ## Git
 
