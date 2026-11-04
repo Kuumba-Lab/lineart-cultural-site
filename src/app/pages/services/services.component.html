@@ -27,11 +27,14 @@
 
       <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
         <a *ngIf="s.phone || s.userPhone" [href]="whatsapp(s.phone || s.userPhone)" target="_blank" rel="noopener"
-          class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-green-50 text-green-700 hover:bg-green-100">WhatsApp</a>
+          [attr.aria-label]="'Falar com ' + s.userName + ' no WhatsApp'"
+          class="inline-flex items-center min-h-[40px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-50 text-green-700 hover:bg-green-100">WhatsApp</a>
         <a *ngIf="s.instagram" [href]="instagramUrl(s.instagram)" target="_blank" rel="noopener"
-          class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-pink-50 text-pink-600 hover:bg-pink-100">Instagram</a>
+          [attr.aria-label]="'Instagram de ' + s.userName"
+          class="inline-flex items-center min-h-[40px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-pink-50 text-pink-600 hover:bg-pink-100">Instagram</a>
         <a *ngIf="s.website" [href]="s.website" target="_blank" rel="noopener"
-          class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100">Site</a>
+          [attr.aria-label]="'Site de ' + s.userName"
+          class="inline-flex items-center min-h-[40px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100">Site</a>
       </div>
     </div>
   </div>

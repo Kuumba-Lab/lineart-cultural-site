@@ -1,14 +1,21 @@
-<footer class="print:hidden flex flex-row justify-center w-full min-h-[100px] h-[100px] bg-[#0a0d29]">
-  <div class="container">
-    <div class="h-full  flex flex-row">
-      <img class="h-full p-4" src="logo.png" alt="Logo LINEART">
+<footer class="print:hidden flex flex-row justify-center w-full bg-[#0a0d29] py-6">
+  <div class="container px-4 flex flex-col md:flex-row items-center md:items-start gap-6">
+    <a routerLink="/" class="flex items-center shrink-0" aria-label="LINEART - página inicial">
+      <img class="h-16" src="logo.png" alt="Logo LINEART">
+    </a>
 
-      <div class="flex flex-col font-inter p-4 text-slate-100 text-sm text-center md:text-start max-md:mb-6">
-        <p>&copy; LINEART Capoeira Angola - 2025</p>
-        <p class="text-slate-300">CNPJ: 18.126.628/0001-01</p>
-        <p class="text-slate-400">Todos os direitos reservados</p>
-      </div>
+    <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2 md:ml-auto" aria-label="Rodapé">
+      <a routerLink="/sobre" class="text-sm text-slate-300 hover:text-white py-1.5">Sobre</a>
+      <a routerLink="/mestre" class="text-sm text-slate-300 hover:text-white py-1.5">Mestre</a>
+      <a routerLink="/publicacoes" class="text-sm text-slate-300 hover:text-white py-1.5">Publicações</a>
+      <a routerLink="/servicos" class="text-sm text-slate-300 hover:text-white py-1.5">Serviços</a>
+      <a routerLink="/contato" class="text-sm text-slate-300 hover:text-white py-1.5">Contato</a>
+    </nav>
+
+    <div class="flex flex-col text-slate-100 text-sm text-center md:text-end">
+      <p>&copy; LINEART Capoeira Angola - 2025</p>
+      <p class="text-slate-300">CNPJ: 18.126.628/0001-01</p>
+      <p class="text-slate-400">Todos os direitos reservados</p>
     </div>
   </div>
-
 </footer>

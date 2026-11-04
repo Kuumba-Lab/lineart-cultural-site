@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
@@ -20,6 +20,11 @@ export class HeaderComponent {
   menuOpen = false;
 
   constructor(private readonly router: Router) { }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.menuOpen = false;
+  }
 
   onSearch(event: Event): void {
     event.preventDefault();
