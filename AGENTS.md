@@ -21,7 +21,8 @@ O site consome a `lineart-api` em **endpoints públicos** (leitura, sem auth):
 | `src/app/services/services.service.ts` | `GET api/users/services` (anônimo → só `ShowOnSite`) | `/servicos` — "Serviços da comunidade" cadastrados no perfil do admin |
 
 - `src/env.ts` → `appEnv.apiUrl` (dev: `http://localhost:8201`, typo `isPorduction` compartilhado com o admin — não renomear). `provideHttpClient(withFetch())` em `app.config.ts`; services usam `take(1)` e tratam erro silenciosamente (página renderiza estado vazio).
-- **SSR/prerender**: o fetch roda no Node durante SSR — `localhost:8201` dentro do container aponta pro próprio container e falha; o estado vazio é renderizado e o browser re-busca na hidratação (CORS já cobre `localhost:8202`). Funciona, mas o HTML do SSR não traz os dados — quirk conhecido.
+- **URL por plataforma** (`src/app/services/api-url.ts`): no **browser** usa `appEnv.apiUrl`; no **servidor SSR** usa `process.env.API_INTERNAL_URL` ou o fallback `http://lineart-api` (o `localhost` dentro do container aponta pro próprio site — nunca use `appEnv.apiUrl` em fetch server-side). Todo service novo que fala com a API deve passar por `resolveApiUrl(PLATFORM_ID)`.
+- **`prerender: false`** no `angular.json` — rotas dinâmicas (`/servicos`, `/publicacoes`) precisam de SSR em runtime; o prerender rodaria no `docker build` sem acesso à API e assaria o estado vazio no HTML.
 - O formulário de contato (`ContactSectionComponent`) continua estático — só monta texto e abre `wa.me/557991469391` (Mestre Formiga).
 - **Env de produção**: o `Dockerfile` gera `env-prod.ts` com `ARG API_URL` (default `http://localhost:8201`) e `env.sh` faz `mv env-prod.ts → env.ts` antes do build — mesmo padrão do admin (`env-prod.ts` é gitignored). Quando o domínio público da API existir, passe `--build-arg API_URL=https://<dominio-api>` no build da imagem (o workflow hoje não passa — mantém localhost).
 
