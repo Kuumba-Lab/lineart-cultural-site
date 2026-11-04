@@ -5,16 +5,32 @@
     </a>
 
     <nav class="ml-auto flex items-center gap-4">
-      <a routerLink="/sobre" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Sobre</a>
-      <a routerLink="/mestre" class="hidden md:block text-sm font-medium text-white/90 hover:text-white">Mestre</a>
-      <a routerLink="/publicacoes" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Publicações</a>
-      <a routerLink="/servicos" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Serviços</a>
-      <a routerLink="/contato" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Contato</a>
+      <a routerLink="/sobre" class="hidden lg:block text-sm font-medium text-white/90 hover:text-white">Sobre</a>
+      <a routerLink="/mestre" class="hidden lg:block text-sm font-medium text-white/90 hover:text-white">Mestre</a>
+      <a routerLink="/publicacoes" class="hidden lg:block text-sm font-medium text-white/90 hover:text-white">Publicações</a>
+      <a routerLink="/servicos" class="hidden lg:block text-sm font-medium text-white/90 hover:text-white">Serviços</a>
+      <a routerLink="/contato" class="hidden lg:block text-sm font-medium text-white/90 hover:text-white">Contato</a>
 
       <form class="flex items-center" (submit)="onSearch($event)">
         <input type="search" name="q" [(ngModel)]="searchTerm" placeholder="Buscar…" aria-label="Buscar no site"
           class="w-32 sm:w-56 bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 px-3 py-1.5">
       </form>
+
+      <button type="button" (click)="menuOpen = !menuOpen"
+        class="lg:hidden inline-flex items-center justify-center w-10 h-10 text-white/90 hover:text-white" aria-label="Abrir menu">
+        <svg *ngIf="!menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg *ngIf="menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
     </nav>
   </div>
+
+  <nav *ngIf="menuOpen" class="lg:hidden absolute top-[80px] left-0 w-full bg-[#0a0d29] border-t border-white/10 z-40" (click)="menuOpen = false">
+    <ul class="flex flex-col">
+      <li><a routerLink="/sobre" class="block py-3 px-5 text-sm font-medium text-white/90 hover:bg-white/5 border-b border-white/5">Sobre</a></li>
+      <li><a routerLink="/mestre" class="block py-3 px-5 text-sm font-medium text-white/90 hover:bg-white/5 border-b border-white/5">Mestre</a></li>
+      <li><a routerLink="/publicacoes" class="block py-3 px-5 text-sm font-medium text-white/90 hover:bg-white/5 border-b border-white/5">Publicações</a></li>
+      <li><a routerLink="/servicos" class="block py-3 px-5 text-sm font-medium text-white/90 hover:bg-white/5 border-b border-white/5">Serviços</a></li>
+      <li><a routerLink="/contato" class="block py-3 px-5 text-sm font-medium text-white/90 hover:bg-white/5">Contato</a></li>
+    </ul>
+  </nav>
 </header>

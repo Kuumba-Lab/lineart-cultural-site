@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -8,6 +9,7 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './header.component.html',
   imports: [
     FormsModule,
+    NgIf,
     RouterModule,
   ],
   styleUrls: []
@@ -15,6 +17,7 @@ import { Router, RouterModule } from '@angular/router';
 export class HeaderComponent {
 
   searchTerm = '';
+  menuOpen = false;
 
   constructor(private readonly router: Router) { }
 
