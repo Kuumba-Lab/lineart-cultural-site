@@ -25,10 +25,10 @@
           </p>
 
           <div class="mt-6 flex flex-wrap gap-3">
-            <a href="#contato" class="rounded-lg bg-blue-700 hover:bg-blue-600 text-white px-5 py-3 text-sm sm:text-base font-semibold transition-colors duration-200">
+            <a routerLink="/contato" class="rounded-lg bg-blue-700 hover:bg-blue-600 text-white px-5 py-3 text-sm sm:text-base font-semibold transition-colors duration-200">
               Fale com a gente
             </a>
-            <a href="#sobre" class="rounded-lg border border-white/50 hover:bg-white/10 text-white px-5 py-3 text-sm sm:text-base font-semibold transition-colors duration-200">
+            <a routerLink="/sobre" class="rounded-lg border border-white/50 hover:bg-white/10 text-white px-5 py-3 text-sm sm:text-base font-semibold transition-colors duration-200">
               Conheça o projeto
             </a>
           </div>
@@ -38,10 +38,6 @@
   </section>
 
   <div class="relative">
-    <div class="absolute inset-x-0 top-0 h-16 sm:h-20 bg-gradient-to-b from-slate-50 to-transparent pointer-events-none"></div>
-    <app-about-section></app-about-section>
-    <app-mestre-section></app-mestre-section>
     <app-posts-section></app-posts-section>
-    <app-contact-section></app-contact-section>
   </div>
 </div>

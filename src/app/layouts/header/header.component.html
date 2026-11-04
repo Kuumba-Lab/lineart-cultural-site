@@ -5,10 +5,11 @@
     </a>
 
     <nav class="ml-auto flex items-center gap-4">
+      <a routerLink="/sobre" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Sobre</a>
+      <a routerLink="/mestre" class="hidden md:block text-sm font-medium text-white/90 hover:text-white">Mestre</a>
+      <a routerLink="/publicacoes" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Publicações</a>
       <a routerLink="/servicos" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Serviços</a>
-      <a routerLink="/publicacoes" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">
-        Publicações
-      </a>
+      <a routerLink="/contato" class="hidden sm:block text-sm font-medium text-white/90 hover:text-white">Contato</a>
 
       <form class="flex items-center" (submit)="onSearch($event)">
         <input type="search" name="q" [(ngModel)]="searchTerm" placeholder="Buscar…" aria-label="Buscar no site"
