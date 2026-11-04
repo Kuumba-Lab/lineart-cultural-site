@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { appEnv } from '../../env';
+import { resolveApiUrl } from './api-url';
 
 export interface PublicServiceModel {
   id: string;
@@ -19,7 +19,7 @@ export interface PublicServiceModel {
 
 @Injectable({ providedIn: 'root' })
 export class ServicesService {
-  private readonly endpoint = `${appEnv.apiUrl}/api/users/services`;
+  private readonly endpoint = `${resolveApiUrl(inject(PLATFORM_ID))}/api/users/services`;
 
   constructor(private http: HttpClient) {}
 

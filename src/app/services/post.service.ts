@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { appEnv } from '../../env';
 import { PagedModel, PostModel } from '../models/post.model';
+import { resolveApiUrl } from './api-url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
-  private readonly endpoint = `${appEnv.apiUrl}/api/posts`;
+  private readonly endpoint = `${resolveApiUrl(inject(PLATFORM_ID))}/api/posts`;
 
   constructor(private readonly http: HttpClient) { }
 
