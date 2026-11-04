@@ -8,7 +8,10 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+ARG API_URL=http://localhost:8201
+RUN printf "export const appEnv = {\n  apiUrl: '%s',\n  isPorduction: true\n}\n" "$API_URL" > ./src/env-prod.ts \
+    && sh ./env.sh \
+    && npm run build
 
 EXPOSE 4200
 

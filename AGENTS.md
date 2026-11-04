@@ -7,13 +7,23 @@ Site institucional one-page da LINEART (Capoeira Angola) — produção em `capo
 - **Angular 18** (standalone, sem módulos), SSR via `@angular/ssr` + Express (`server.ts` → `dist/lineart-cultural-site/server/server.mjs`).
 - **Tailwind 3** — `tailwind.config.js` com paleta `primary` (verdes) / `secondary` (laranjas) / `gray`. O `ng build`/`ng serve` já processa via `src/styles.css` (`@tailwind` directives). O script `npm run css` (watch legado) **não é necessário** no fluxo normal.
 - **PWA**: `ngsw-config.json` — prefetch do app shell, lazy para imagens/fonts; service worker só registra em produção (`!isDevMode()`). Ícones/manifest em `public/`.
-- Uma única rota (`''` → `HomeComponent` em `src/app/pages/home/`) que compõe as sections: `banner`, `about-section`, `mestre-section`, `instagram-section`, `contact-section` (`src/app/components/`).
+- Rotas: `''` → `HomeComponent` (sections `banner`, `about-section`, `mestre-section`, `instagram-section`, `contact-section`, `posts-section` em `src/app/components/` + `src/app/pages/home/`), `/publicacoes` e `/publicacoes/:id` (`src/app/pages/posts/`), `/servicos` (`src/app/pages/services/`).
 - `src/app/layouts/` (header/footer) entram no `AppComponent` via array `components` exportado de `src/app/app.imports.ts` — ao adicionar layout global, registre lá.
 - `src/app/services/instagram.service.ts` injeta `instagram.com/embed.js` uma vez (`afterRender` no HomeComponent) e chama `instgrm.Embeds.process()` — se embeds novos entrarem no DOM depois, chame `process()` de novo.
 
-## O site NÃO consome a lineart-api
+## Consumo da lineart-api
 
-Não há `HttpClient` nem `environment.ts` — todo o conteúdo é estático. O formulário de contato (`ContactSectionComponent`) só monta texto e abre `wa.me/557991469391` (Mestre Formiga). Se um dia integrar com a API, esse arquivo é o ponto de mudança — hoje qualquer "chamada ao back" é sinal de escopo errado.
+O site consome a `lineart-api` em **endpoints públicos** (leitura, sem auth):
+
+| Service | Endpoint | Uso |
+|---|---|---|
+| `src/app/services/post.service.ts` | `GET api/posts` (paginado, anônimo → só `isActive=true`), `GET api/posts/{id}` | `posts-section` na home, `/publicacoes`, `/publicacoes/:id` |
+| `src/app/services/services.service.ts` | `GET api/users/services` (anônimo → só `ShowOnSite`) | `/servicos` — "Serviços da comunidade" cadastrados no perfil do admin |
+
+- `src/env.ts` → `appEnv.apiUrl` (dev: `http://localhost:8201`, typo `isPorduction` compartilhado com o admin — não renomear). `provideHttpClient(withFetch())` em `app.config.ts`; services usam `take(1)` e tratam erro silenciosamente (página renderiza estado vazio).
+- **SSR/prerender**: o fetch roda no Node durante SSR — `localhost:8201` dentro do container aponta pro próprio container e falha; o estado vazio é renderizado e o browser re-busca na hidratação (CORS já cobre `localhost:8202`). Funciona, mas o HTML do SSR não traz os dados — quirk conhecido.
+- O formulário de contato (`ContactSectionComponent`) continua estático — só monta texto e abre `wa.me/557991469391` (Mestre Formiga).
+- **Env de produção**: o `Dockerfile` gera `env-prod.ts` com `ARG API_URL` (default `http://localhost:8201`) e `env.sh` faz `mv env-prod.ts → env.ts` antes do build — mesmo padrão do admin (`env-prod.ts` é gitignored). Quando o domínio público da API existir, passe `--build-arg API_URL=https://<dominio-api>` no build da imagem (o workflow hoje não passa — mantém localhost).
 
 ## SEO/meta
 
